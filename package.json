@@ -33,16 +33,29 @@
     "appId": "com.localmusic.app",
     "productName": "LocalMusic",
     "files": [
-      "**/*"
+      "**/*",
+      "!node_modules/**/*",
+      "!dist/**/*",
+      "!.git/**/*",
+      "!build/**/*"
     ],
+    "directories": {
+      "output": "dist"
+    },
     "win": {
-      "target": "nsis"
+      "target": ["nsis"]
     },
     "mac": {
-      "target": "dmg"
+      "target": ["dmg"],
+      "category": "public.app-category.music"
     },
     "linux": {
-      "target": "AppImage"
+      "target": ["AppImage"],
+      "category": "Audio"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     }
   },
   "devDependencies": {
