@@ -1,0 +1,37 @@
+{
+  "name": "local-music",
+  "version": "1.0.0",
+  "description": "A modern, open-source desktop music manager and downloader built with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "keywords": [
+    "music",
+    "downloader",
+    "electron",
+    "music-player",
+    "music-manager",
+    "audio",
+    "mp3",
+    "desktop-app",
+    "cross-platform"
+  ],
+  "author": "Local Music Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MadBlast0/local-music.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MadBlast0/local-music/issues"
+  },
+  "homepage": "https://github.com/MadBlast0/local-music#readme",
+  "devDependencies": {
+    "electron": "^28.0.0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}

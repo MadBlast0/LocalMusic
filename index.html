@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Downloader</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="src/styles/variables.css">
+  <link rel="stylesheet" href="src/styles/base.css">
+  <link rel="stylesheet" href="src/styles/animations.css">
+  <link rel="stylesheet" href="src/styles/components.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="header-content">
+      <a href="#" class="logo">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+          </svg>
+        </div>
+        <span>MUSIC MANAGER</span>
+      </a>
+      
+      <nav class="nav">
+        <button class="nav-btn active" data-page="library">Library</button>
+        <button class="nav-btn" data-page="downloader">Downloader</button>
+        <button class="nav-btn" data-page="settings">Settings</button>
+        <button class="btn-donate" id="donateBtn" title="Support the project">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span>Donate</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    
+    <!-- Library Page -->
+    <section class="page active" id="page-library">
+      <div class="library-layout">
+        
+        <!-- Sidebar -->
+        <aside class="library-sidebar">
+          <div class="sidebar-header">
+            <h3>Library</h3>
+            <button class="btn-icon" id="refreshLibraryBtn" title="Refresh Library">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="1 4 1 10 7 10"/>
+                <path d="M3.51 15a9 9 0 1 0 .49-3.08"/>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="folder-tree" id="folderTree">
+            <div class="folder-item active" data-folder="">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              </svg>
+              <span>All Music</span>
+              <span class="folder-count">0</span>
+            </div>
+          </div>
+          
+          <div class="sidebar-actions">
+            <button class="btn btn-secondary btn-sm" id="createFolderBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                <line x1="12" y1="11" x2="12" y2="17"/>
+                <line x1="9" y1="14" x2="15" y2="14"/>
+              </svg>
+              New Folder
+            </button>
+          </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="library-main">
+          <div class="library-header">
+            <div class="library-info">
+              <h2 id="currentFolderName">All Music</h2>
+              <p id="songCount">0 songs</p>
+            </div>
+            <div class="library-controls">
+              <input type="text" class="input input-sm" id="searchInput" placeholder="Search songs...">
+              <select class="select select-sm" id="sortSelect">
+                <option value="name">Sort by Name</option>
+                <option value="artist">Sort by Artist</option>
+                <option value="date">Sort by Date</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="song-list" id="songList">
+            <div class="empty-state">
+              <div class="empty-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                </svg>
+              </div>
+              <h3 class="empty-title">No songs yet</h3>
+              <p class="empty-text">Download some music to get started</p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+    
+
+    <!-- Downloader Page -->
+    <section class="page" id="page-downloader">
+      <div class="downloader-container">
+        
+        <!-- Action Bar -->
+        <div class="action-bar">
+          <div class="action-bar-left">
+            <input 
+              type="text" 
+              class="input" 
+              id="urlInput"
+              placeholder="Paste URL from supported sources..."
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <button class="btn btn-primary" id="fetchBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+              Fetch
+            </button>
+          </div>
+          <div class="action-bar-right">
+            <button class="btn btn-secondary" id="importFilesBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Import Files
+            </button>
+            <input type="file" id="fileInput" accept=".csv,.txt,.json" multiple style="display: none;">
+          </div>
+        </div>
+
+        <!-- Error Alert -->
+        <div class="alert alert-error" id="errorAlert" style="display: none;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="errorText"></span>
+        </div>
+
+        <!-- Custom Confirmation Dialog -->
+        <div class="modal-overlay" id="confirmModal" style="display: none;">
+          <div class="modal-dialog">
+            <div class="modal-header">
+              <h3 id="confirmTitle">Confirm Action</h3>
+            </div>
+            <div class="modal-body">
+              <p id="confirmMessage"></p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
+              <button class="btn btn-primary" id="confirmOkBtn">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+          <div class="results-header">
+            <h3 class="results-count" id="resultsCount"></h3>
+            <button class="btn btn-primary" id="downloadAllBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download All
+            </button>
+          </div>
+
+          <!-- Track List -->
+          <div class="track-list" id="trackList"></div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+            </svg>
+          </div>
+          <h3 class="empty-title">Ready to download</h3>
+          <p class="empty-text">Paste a URL and click Fetch, or import playlist files</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Settings Page -->
+    <section class="page" id="page-settings">
+      <div class="settings-container">
+        <h1>Settings</h1>
+        
+        <!-- Concurrency Control Card -->
+        <div class="settings-card">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download Concurrency
+          </h3>
+          <p>Control how many tracks download simultaneously</p>
+          
+          <div style="margin-bottom: var(--space-3);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-2);">
+              <label class="input-label" style="margin: 0;">Max Downloads: <span id="concurrencyValue" style="color: var(--accent);">2</span></label>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="concurrencyStatus" style="font-size: 0.85rem; color: var(--success);">Recommended</span>
+                <div class="tooltip-trigger">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--muted); cursor: help;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                  <div class="tooltip">
+                    <strong>Higher values increase download speed but may cause:</strong>
+                    <ul style="margin: 8px 0 8px 16px; padding: 0;">
+                      <li>Failed downloads</li>
+                      <li>Rate limiting from sources</li>
+                      <li>Slower performance overall</li>
+                    </ul>
+                    <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border);">
+                      <strong>Recommended setting: 2–3</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <input 
+              type="range" 
+              id="concurrencySlider" 
+              class="slider" 
+              min="1" 
+              max="5" 
+              value="2" 
+              step="1"
+            >
+            
+            <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.75rem; color: var(--muted);">
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+            </div>
+          </div>
+
+          <div class="alert alert-warning" id="concurrencyWarning" style="display: none; background: rgba(255, 170, 0, 0.1); border-color: var(--warning); color: #ffd699;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span>High concurrency may cause download failures</span>
+          </div>
+        </div>
+        
+        <!-- Download Location Card -->
+        <div class="settings-card">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            Download Location
+          </h3>
+          <p>Choose where your MP3 files are saved</p>
+          
+          <div class="folder-display">
+            <div class="folder-label">Current Folder</div>
+            <div class="folder-path" id="folderPath">Loading...</div>
+          </div>
+
+          <div class="button-group">
+            <button class="btn btn-secondary" id="chooseFolderBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              Change Folder
+            </button>
+            <button class="btn btn-secondary" id="openFolderBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              Open Folder
+            </button>
+          </div>
+        </div>
+
+        <!-- Dependencies Card -->
+        <div class="settings-card">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            Dependencies
+          </h3>
+          <p>Required tools for downloading audio</p>
+          
+          <div class="dep-list">
+            <div class="dep-item" id="ytdlpStatus">
+              <div class="status-dot" style="background: var(--muted);"></div>
+              <div class="dep-info">
+                <div class="dep-name">yt-dlp</div>
+                <div class="dep-desc">Audio/video downloader</div>
+              </div>
+              <div class="dep-status" style="color: var(--muted);">Checking...</div>
+            </div>
+            
+            <div class="dep-item" id="ffmpegStatus">
+              <div class="status-dot" style="background: var(--muted);"></div>
+              <div class="dep-info">
+                <div class="dep-name">ffmpeg</div>
+                <div class="dep-desc">Audio conversion to MP3</div>
+              </div>
+              <div class="dep-status" style="color: var(--muted);">Checking...</div>
+            </div>
+          </div>
+
+          <button class="btn btn-secondary" id="recheckDepsBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="1 4 1 10 7 10"/>
+              <path d="M3.51 15a9 9 0 1 0 .49-3.08"/>
+            </svg>
+            Re-check
+          </button>
+        </div>
+
+        <!-- Clear Cache Card -->
+        <div class="settings-card">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              <line x1="10" y1="11" x2="10" y2="17"/>
+              <line x1="14" y1="11" x2="14" y2="17"/>
+            </svg>
+            Clear Cache
+          </h3>
+          <p>Free up memory and clear temporary data</p>
+          
+          <div class="cache-info" id="cacheInfo">
+            <div class="cache-stat">
+              <span class="cache-label">Cache Size:</span>
+              <span class="cache-value" id="cacheSize">Calculating...</span>
+            </div>
+            <div class="cache-stat">
+              <span class="cache-label">App Memory Usage:</span>
+              <span class="cache-value" id="memoryUsage">Calculating...</span>
+            </div>
+            <div class="cache-stat">
+              <span class="cache-label">System RAM:</span>
+              <span class="cache-value" id="systemMemory">Calculating...</span>
+            </div>
+          </div>
+
+          <button class="btn btn-secondary" id="clearCacheBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="1 4 1 10 7 10"/>
+              <path d="M3.51 15a9 9 0 1 0 .49-3.08"/>
+            </svg>
+            Clear Cache & Free Memory
+          </button>
+          
+          <div class="alert alert-success" id="cacheSuccessAlert" style="display: none; margin-top: var(--space-2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span id="cacheSuccessText"></span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Music Player Bar -->
+  <div class="player-bar" id="playerBar">
+    <div class="player-content">
+      
+      <!-- Top Row: Info, Controls, Volume -->
+      <div class="player-top-row">
+        <!-- Song Info -->
+        <div class="player-info">
+          <div class="player-artwork">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+            </svg>
+          </div>
+          <div class="player-details">
+            <div class="player-title" id="playerTitle">No song playing</div>
+            <div class="player-artist" id="playerArtist">Select a song to play</div>
+          </div>
+        </div>
+        
+        <!-- Player Controls -->
+        <div class="player-controls-center">
+          <button class="btn-control" id="shuffleBtn" title="Shuffle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 3 21 3 21 8"/>
+              <line x1="4" y1="20" x2="21" y2="3"/>
+              <polyline points="21 16 21 21 16 21"/>
+              <line x1="15" y1="15" x2="21" y2="21"/>
+              <line x1="4" y1="4" x2="9" y2="9"/>
+            </svg>
+          </button>
+          <button class="btn-control" id="prevBtn" title="Previous">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="19 20 9 12 19 4 19 20"/>
+              <line x1="5" y1="19" x2="5" y2="5"/>
+            </svg>
+          </button>
+          <button class="btn-control btn-control-play" id="playPauseBtn" title="Play">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+          </button>
+          <button class="btn-control" id="nextBtn" title="Next">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 4 15 12 5 20 5 4"/>
+              <line x1="19" y1="5" x2="19" y2="19"/>
+            </svg>
+          </button>
+          <button class="btn-control" id="repeatBtn" title="Repeat">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="17 1 21 5 17 9"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <polyline points="7 23 3 19 7 15"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Volume Control -->
+        <div class="player-volume">
+          <button class="btn-control" id="volumeBtn" title="Mute">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            </svg>
+          </button>
+          <div class="volume-slider">
+            <input type="range" id="volumeSlider" min="0" max="100" value="70">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Bottom Row: Progress Bar -->
+      <div class="progress-container">
+        <span class="time-current" id="currentTime">0:00</span>
+        <div class="progress-bar">
+          <div class="progress-track" id="progressTrack">
+            <div class="progress-fill" id="progressFill"></div>
+            <div class="progress-handle" id="progressHandle"></div>
+          </div>
+        </div>
+        <span class="time-total" id="totalTime">0:00</span>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Audio Element -->
+  <audio id="audioPlayer"></audio>
+
+  <!-- Scripts -->
+  <script src="src/scripts/app.js"></script>
+  <script src="src/scripts/library.js"></script>
+
+</body>
+</html>
