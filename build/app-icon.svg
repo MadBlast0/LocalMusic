@@ -1,0 +1,11 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Red rounded square background -->
+  <rect width="512" height="512" rx="115" fill="#FF3B3B"/>
+  
+  <!-- White music note - exact same as in the app header, scaled bigger -->
+  <g transform="translate(256, 256) scale(16)">
+    <g transform="translate(-12, -12)">
+      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" fill="white"/>
+    </g>
+  </g>
+</svg>
