@@ -11,7 +11,7 @@ let mainWindow;
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const CONFIG_PATH = path.join(app.getPath('userData'), 'config.json');
-const DEFAULT_DOWNLOAD_DIR = path.join(os.homedir(), 'Downloads', 'Simple Music Downloader');
+const DEFAULT_DOWNLOAD_DIR = path.join(os.homedir(), 'Music', 'Local Music');
 
 function loadConfig() {
   try {
@@ -38,11 +38,26 @@ function getDownloadsDir() {
 // ── Window ────────────────────────────────────────────────────────────────────
 
 function createWindow() {
+  // Try to load icon, fallback to undefined if not found
+  let iconPath;
+  try {
+    const pngPath = path.join(__dirname, 'build', 'icon.png');
+    const svgPath = path.join(__dirname, 'build', 'app-icon.svg');
+    if (fs.existsSync(pngPath)) {
+      iconPath = pngPath;
+    } else if (fs.existsSync(svgPath)) {
+      iconPath = svgPath;
+    }
+  } catch (e) {
+    console.log('Icon not found, using default');
+  }
+
   mainWindow = new BrowserWindow({
     width: 960,
     height: 720,
     minWidth: 720,
     minHeight: 560,
+    icon: iconPath,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,

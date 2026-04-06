@@ -1,7 +1,7 @@
 {
   "name": "local-music",
   "version": "1.0.0",
-  "description": "A modern, open-source desktop music manager and downloader built with Electron",
+  "description": "A modern, open-source desktop music downloader built with Electron",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -13,8 +13,7 @@
     "music",
     "downloader",
     "electron",
-    "music-player",
-    "music-manager",
+    "music-downloader",
     "audio",
     "mp3",
     "desktop-app",
@@ -32,7 +31,7 @@
   "homepage": "https://github.com/MadBlast0/local-music#readme",
   "build": {
     "appId": "com.localmusic.app",
-    "productName": "LocalMusic",
+    "productName": "Local Music",
     "files": [
       "main.js",
       "preload.js",
@@ -47,20 +46,25 @@
     },
     "win": {
       "target": ["nsis"],
-      "sign": null
+      "sign": null,
+      "icon": "build/app-icon.svg"
     },
     "mac": {
       "target": ["dmg"],
       "category": "public.app-category.music",
-      "identity": null
+      "identity": null,
+      "icon": "build/app-icon.svg"
     },
     "linux": {
       "target": ["AppImage"],
-      "category": "Audio"
+      "category": "Audio",
+      "icon": "build/app-icon.svg"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/app-icon.svg",
+      "uninstallerIcon": "build/app-icon.svg"
     }
   },
   "devDependencies": {

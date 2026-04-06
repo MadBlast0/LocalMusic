@@ -814,10 +814,11 @@ downloadAllBtn.addEventListener('click', async () => {
     downloadAllBtn.classList.remove('btn-primary');
     downloadAllBtn.classList.add('btn-danger');
     
-    // Queue all non-completed tracks
+    // Queue all non-completed tracks (skip already downloaded files)
     for (let i = 0; i < tracks.length; i++) {
       const item = document.querySelector(`[data-index="${i}"]`);
-      if (item && !item.classList.contains('completed') && !item.classList.contains('downloading')) {
+      // Only queue if not completed, not downloading, and not already in queue
+      if (item && !item.classList.contains('completed') && !item.classList.contains('downloading') && !downloadQueue.includes(i)) {
         queueDownload(i);
       }
     }

@@ -200,8 +200,16 @@ function playSong(index) {
   const song = filteredSongs[index];
   
   audioPlayer.src = `file://${song.path}`;
+  
+  // Start with volume at 0 for fade in
+  const targetVolume = volumeSlider.value / 100;
+  audioPlayer.volume = 0;
+  
   audioPlayer.play();
   isPlaying = true;
+  
+  // Fade in over 300ms
+  fadeVolume(targetVolume, 300);
   
   updatePlayerUI(song);
   updatePlayPauseButton();
@@ -317,6 +325,13 @@ audioPlayer.addEventListener('timeupdate', () => {
     progressFill.style.width = `${percent}%`;
     progressHandle.style.left = `${percent}%`;
     currentTime.textContent = formatTime(audioPlayer.currentTime);
+    
+    // Fade out near end of song (last 2 seconds)
+    const timeRemaining = audioPlayer.duration - audioPlayer.currentTime;
+    if (timeRemaining <= 2 && timeRemaining > 0 && !isDragging) {
+      const targetVolume = (timeRemaining / 2) * (volumeSlider.value / 100);
+      audioPlayer.volume = Math.max(0, targetVolume);
+    }
   }
 });
 
@@ -328,11 +343,81 @@ audioPlayer.addEventListener('ended', () => {
   playNext();
 });
 
-// Progress bar
+// Progress bar - improved seek with handle dragging and audio fade
+let isDragging = false;
+let fadeInterval = null;
+
+// Fade audio volume
+function fadeVolume(targetVolume, duration = 200) {
+  if (fadeInterval) clearInterval(fadeInterval);
+  
+  const startVolume = audioPlayer.volume;
+  const volumeDiff = targetVolume - startVolume;
+  const steps = 20;
+  const stepDuration = duration / steps;
+  const stepSize = volumeDiff / steps;
+  let currentStep = 0;
+  
+  fadeInterval = setInterval(() => {
+    currentStep++;
+    if (currentStep >= steps) {
+      audioPlayer.volume = targetVolume;
+      clearInterval(fadeInterval);
+      fadeInterval = null;
+    } else {
+      audioPlayer.volume = startVolume + (stepSize * currentStep);
+    }
+  }, stepDuration);
+}
+
+// Handle dragging
+progressHandle.addEventListener('mousedown', (e) => {
+  e.stopPropagation();
+  isDragging = true;
+  
+  // Fade out when starting to seek
+  const savedVolume = volumeSlider.value / 100;
+  fadeVolume(0, 150);
+  
+  const handleMouseMove = (e) => {
+    if (isDragging && audioPlayer.duration) {
+      const rect = progressTrack.getBoundingClientRect();
+      const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      audioPlayer.currentTime = percent * audioPlayer.duration;
+    }
+  };
+  
+  const handleMouseUp = () => {
+    if (isDragging) {
+      isDragging = false;
+      // Fade back in after seeking
+      fadeVolume(savedVolume, 200);
+    }
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+  
+  document.addEventListener('mousemove', handleMouseMove);
+  document.addEventListener('mouseup', handleMouseUp);
+});
+
+// Click on track to seek
 progressTrack.addEventListener('click', (e) => {
-  const rect = progressTrack.getBoundingClientRect();
-  const percent = (e.clientX - rect.left) / rect.width;
-  audioPlayer.currentTime = percent * audioPlayer.duration;
+  if (!isDragging && audioPlayer.duration) {
+    const rect = progressTrack.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    
+    // Fade out, seek, fade in
+    const savedVolume = volumeSlider.value / 100;
+    fadeVolume(0, 100);
+    
+    setTimeout(() => {
+      audioPlayer.currentTime = percent * audioPlayer.duration;
+      setTimeout(() => {
+        fadeVolume(savedVolume, 150);
+      }, 50);
+    }, 100);
+  }
 });
 
 // Volume
