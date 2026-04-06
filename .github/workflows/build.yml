@@ -31,7 +31,23 @@ jobs:
         timeout-minutes: 10
       
       - name: Build
-        run: npm run build
+        run: npm run build -- --win nsis
+        if: matrix.os == 'windows-latest'
+        timeout-minutes: 15
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build
+        run: npm run build -- --mac dmg
+        if: matrix.os == 'macos-latest'
+        timeout-minutes: 15
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+      
+      - name: Build
+        run: npm run build -- --linux AppImage
+        if: matrix.os == 'ubuntu-latest'
         timeout-minutes: 15
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
