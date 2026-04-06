@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dev": "electron . --dev"
+    "dev": "electron . --dev",
+    "build": "electron-builder"
   },
   "keywords": [
     "music",
@@ -28,8 +29,25 @@
     "url": "https://github.com/MadBlast0/local-music/issues"
   },
   "homepage": "https://github.com/MadBlast0/local-music#readme",
+  "build": {
+    "appId": "com.localmusic.app",
+    "productName": "LocalMusic",
+    "files": [
+      "**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
   "devDependencies": {
-    "electron": "^28.0.0"
+    "electron": "^28.0.0",
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
     "node-fetch": "^2.7.0"
