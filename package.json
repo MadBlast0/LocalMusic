@@ -33,14 +33,16 @@
     "appId": "com.localmusic.app",
     "productName": "LocalMusic",
     "files": [
-      "**/*",
-      "!node_modules/**/*",
-      "!dist/**/*",
-      "!.git/**/*",
-      "!build/**/*"
+      "main.js",
+      "preload.js",
+      "index.html",
+      "donate.html",
+      "src/**/*",
+      "package.json"
     ],
     "directories": {
-      "output": "dist"
+      "output": "dist",
+      "buildResources": "build"
     },
     "win": {
       "target": ["nsis"]
