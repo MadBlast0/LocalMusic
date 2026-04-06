@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "build:dir": "electron-builder --dir"
   },
   "keywords": [
     "music",
@@ -45,11 +46,13 @@
       "buildResources": "build"
     },
     "win": {
-      "target": ["nsis"]
+      "target": ["nsis"],
+      "sign": null
     },
     "mac": {
       "target": ["dmg"],
-      "category": "public.app-category.music"
+      "category": "public.app-category.music",
+      "identity": null
     },
     "linux": {
       "target": ["AppImage"],
@@ -62,7 +65,7 @@
   },
   "devDependencies": {
     "electron": "^28.0.0",
-    "electron-builder": "^24.13.3"
+    "electron-builder": "^25.1.8"
   },
   "dependencies": {
     "node-fetch": "^2.7.0"
